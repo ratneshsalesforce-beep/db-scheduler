@@ -1,0 +1,33 @@
+name: build
+on: [push,pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        java: [ '17', '21' ]
+    name: Temurin ${{ matrix.java }}
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Set up Java ${{ matrix.java }}
+      uses: actions/setup-java@v6
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'temurin'
+        cache: 'maven'
+
+    - name: Run all tests
+      run: mvn -B -Ptests-for-ci,publication clean package --file pom.xml
+      env:
+        TZ: UTC
+
+    - name: Upload coverage to Codecov
+      if: matrix.java == '17'
+      uses: codecov/codecov-action@v7
+      with:
+        files: db-scheduler/target/site/jacoco/jacoco.xml
+        flags: db-scheduler
+        fail_ci_if_error: false
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

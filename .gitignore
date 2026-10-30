@@ -1,0 +1,14 @@
+*.iml
+.idea
+target/
+.classpath
+.project
+.settings/
+dependency-reduced-pom.xml
+.terraform
+terraform.tfstate*
+out/
+
+.claude/settings.local.json
+.serena
+.playwright-mcp/

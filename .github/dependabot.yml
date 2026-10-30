@@ -1,0 +1,37 @@
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    ignore:
+      # Stay on Spring Boot 3.x for the boot3 starter; 4.x is tracked separately via spring-boot-4.version
+      - dependency-name: "org.springframework.boot:*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      database-drivers:
+        patterns:
+          - "org.postgresql*"
+          - "com.mysql*"
+          - "org.mariadb.jdbc*"
+          - "com.microsoft.sqlserver*"
+          - "com.oracle.database.jdbc*"
+      maven-plugins:
+        patterns:
+          - "org.apache.maven.plugins*"
+          - "com.mycila*"
+          - "com.diffplug.spotless*"
+          - "org.codehaus.mojo*"
+      test-dependencies:
+        dependency-type: "development"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
